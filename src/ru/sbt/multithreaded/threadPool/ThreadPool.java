@@ -1,4 +1,4 @@
-package ru.sbt.multithreaded.ThreadPool;
+package ru.sbt.multithreaded.threadPool;
 
 public interface ThreadPool {
     void start();

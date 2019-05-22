@@ -1,4 +1,4 @@
-package ru.sbt.Reflection;
+package ru.sbt.reflection;
 
 import java.lang.reflect.Field;
 

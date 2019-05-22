@@ -1,4 +1,4 @@
-package ru.sbt.Reflection;
+package ru.sbt.reflection;
 
 public class Person {
     private String name = "kek";

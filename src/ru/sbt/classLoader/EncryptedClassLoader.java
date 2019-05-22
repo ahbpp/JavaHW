@@ -1,4 +1,4 @@
-package ru.sbt.ClassLoader;
+package ru.sbt.classLoader;
 
 import java.io.File;
 import java.io.IOException;

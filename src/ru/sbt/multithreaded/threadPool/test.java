@@ -1,4 +1,4 @@
-package ru.sbt.multithreaded.ThreadPool;
+package ru.sbt.multithreaded.threadPool;
 
 import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;

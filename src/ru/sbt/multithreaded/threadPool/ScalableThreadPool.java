@@ -1,8 +1,6 @@
-package ru.sbt.multithreaded.ThreadPool;
+package ru.sbt.multithreaded.threadPool;
 
 import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Queue;
 
 public class ScalableThreadPool implements ThreadPool {
