@@ -5,25 +5,25 @@ import java.util.concurrent.Callable;
 public class Task<T> {
     private final Callable<? extends T> callable;
     private final Object lockFirst = new Object();
-    private volatile T result;
-    private volatile boolean already_yet;
+    private volatile boolean isFirst = true;
+    private volatile boolean isComputed;
     private volatile RuntimeException exception = null;
-    private volatile boolean first_thread = true;
+    private volatile T result;
 
     public Task(Callable<? extends T> callable) {
         this.callable = callable;
     }
 
     public T get() {
-        if (!first_thread) return get_result();
+        if (!isFirst) return get_result();
         if (doFirst()) return compute();
         return get_result();
     }
 
     private boolean doFirst() {
         synchronized (lockFirst) {
-            if (first_thread) {
-                first_thread = false;
+            if (isFirst) {
+                isFirst = false;
                 return true;
             }
             return false;
@@ -34,9 +34,9 @@ public class Task<T> {
         try {
             result = callable.call();
         } catch (Exception e) {
-            exception = new TaskException("Exception during compute result");
+            exception = new TaskException("Exception during compute callable result");
         }
-        already_yet = true;
+        isComputed = true;
         synchronized (this) {
             notifyAll();
         }
@@ -44,13 +44,13 @@ public class Task<T> {
     }
 
     private T get_result() {
-        if (!already_yet) {
+        if (!isComputed) {
             synchronized (this) {
-                while (!already_yet) {
+                while (!isComputed) {
                     try {
                         wait();
                     } catch (InterruptedException e) {
-                        throw new RuntimeException("Thread is interrupt");
+                        throw new RuntimeException("Exception:" + e);
                     }
                 }
             }

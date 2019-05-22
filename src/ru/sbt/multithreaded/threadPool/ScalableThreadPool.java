@@ -6,8 +6,8 @@ import java.util.Queue;
 public class ScalableThreadPool implements ThreadPool {
 
     private final Queue<Runnable> tasksQueue = new ArrayDeque<Runnable>();
-    private volatile int currentWorkedThread = 0;
-    private volatile int currentPerformedThread = 0;
+    private int currentWorkedThread = 0;
+    private int currentPerformedThread = 0;
     private final Object queueLock = new Object();
     private final int minThread;
     private final int maxThread;
@@ -20,8 +20,9 @@ public class ScalableThreadPool implements ThreadPool {
     @Override
     public void start() {
         for (int i = 0; i < minThread; i++) {
-            new ScalableThreadPool.ScalableThread().start();
             currentPerformedThread++;
+            new ScalableThreadPool.ScalableThread().start();
+
         }
     }
 
@@ -62,7 +63,9 @@ public class ScalableThreadPool implements ThreadPool {
                 }
                 try {
                     task.run();
-                    currentWorkedThread--;
+                    synchronized (queueLock) {
+                        currentWorkedThread--;
+                    }
                 } catch (Exception e) {
                     System.out.println("Run error");
                 }

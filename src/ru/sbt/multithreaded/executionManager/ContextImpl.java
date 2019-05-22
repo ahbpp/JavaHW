@@ -9,9 +9,9 @@ public class ContextImpl implements Context {
     private Runnable callback;
     private List<Thread> threadsList = new ArrayList<>();
 
-    private volatile int completedCount;
-    private volatile int failedCount;
-    private volatile int interruptedCount;
+    private  int completedCount;
+    private  int failedCount;
+    private  int interruptedCount;
     private boolean isFirst = true;
 
     public ContextImpl(Runnable callback, Runnable...tasks) {
@@ -30,12 +30,18 @@ public class ContextImpl implements Context {
                     if (!Thread.currentThread().isInterrupted()) {
                         try {
                             task.run();
+                            synchronized (this) {
                                 completedCount++;
+                            }
                         } catch (Exception e) {
+                            synchronized (this) {
                                 failedCount++;
+                            }
                         }
                     } else {
+                        synchronized (this) {
                             interruptedCount++;
+                        }
                     }
                     synchronized (this) {
                         if (isFinished() && isFirst) {
